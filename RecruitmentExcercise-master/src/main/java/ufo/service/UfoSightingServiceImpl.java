@@ -102,17 +102,6 @@ public class UfoSightingServiceImpl implements UfoSightingService{
         }
         return null;
     }
-    public Reader getFileReader(String relativePath) {
-        
-        try {
-            return new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(relativePath), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            
-            e.printStackTrace();
-        }
-        return null;
-    }
-    
     /**
      *
      * This method is to search the Sightings based on year and month from the TSV file.
@@ -131,4 +120,3 @@ public class UfoSightingServiceImpl implements UfoSightingService{
         return ufoSortedData;
     }
 }
-
