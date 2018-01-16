@@ -3,14 +3,13 @@
  */
 package ufo.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.univocity.parsers.tsv.TsvParser;
-import com.univocity.parsers.tsv.TsvParserSettings;
 import ufo.dto.UfoSighting;
 
 /**
@@ -23,21 +22,33 @@ public class UfoSightingServiceImpl implements UfoSightingService{
     
     
     /**
-     * This method reads the TSV file and returns total 61393 records
+     * This method reads the TSV file
      *
      */
     
-    public List<UfoSighting> getAllSightings() {
+    public List<String[]> getAllSightingsFromTSVFile() {
         
-        //UfoSighting ufoData = new UfoSighting();
-        TsvParserSettings settings = new TsvParserSettings();
-        settings.getFormat().setLineSeparator("\n");
+        List<String[]> ufoRecords = new ArrayList<String[]>();
         
-        settings.setHeaderExtractionEnabled(true);
-        settings.setMaxCharsPerColumn(1230000000);
-        TsvParser parser = new TsvParser(settings);
-        
-        List<String[]> ufoRecords = (ArrayList<String[]>) parser.parseAll(getReader("ufo_awesome.tsv"));
+        String line="";
+        try{
+            BufferedReader br = new BufferedReader(getReader("ufo_awesome.tsv"));
+            while ((line = br.readLine()) != null ) {
+                String[] lineVariables = line.split("\t");
+                ufoRecords.add(lineVariables);
+            }
+        } catch (IOException e) {
+            System.err.println(e);
+        }
+        return ufoRecords;
+    }
+    
+    /**
+     * This method returns total 61393 records the TSV file
+     *
+     */
+    public List<UfoSighting>    getAllSightings() {
+        List<String[]> ufoRecords = getAllSightingsFromTSVFile();
         List<UfoSighting> uforows = new ArrayList<UfoSighting>();
         String dateSeen="";
         String dateReported="";
@@ -46,6 +57,7 @@ public class UfoSightingServiceImpl implements UfoSightingService{
         String duration="";
         String description="";
         for(String[] strlist : ufoRecords) {
+            
             if(null != strlist[0]) {
                 dateSeen = strlist[0].toString();
             }
@@ -68,7 +80,6 @@ public class UfoSightingServiceImpl implements UfoSightingService{
             try {
                 if(null != strlist[5]) {
                     description=  strlist[5].toString();
-                    
                 }
             }catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println(e.getMessage());
@@ -104,14 +115,17 @@ public class UfoSightingServiceImpl implements UfoSightingService{
     public List<UfoSighting> search(int yearSeen, int monthSeen) {
         String years = Integer.toString(yearSeen);
         String month = Integer.toString(monthSeen);
+        String  yearAndMonth= years.concat(month);
         List<UfoSighting> ufoListData = getAllSightings();
         List<UfoSighting> ufoSortedData =new ArrayList<UfoSighting>();
         for(UfoSighting u: ufoListData) {
-            if(u.getDateSeen().contains(years.concat(month))) {
+            if(u.getDateSeen().contains(yearAndMonth)) {
                 ufoSortedData.add(u);
             }
         }
         return ufoSortedData;
     }
+    
+    
 }
 
