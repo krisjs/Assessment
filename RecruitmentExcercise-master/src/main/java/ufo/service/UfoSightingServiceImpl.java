@@ -4,6 +4,7 @@
 package ufo.service;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -47,9 +48,10 @@ public class UfoSightingServiceImpl implements UfoSightingService{
      * This method returns total 61393 records the TSV file
      *
      */
-    public List<UfoSighting>    getAllSightings() {
+    public List<UfoSighting> getAllSightings() {
         List<String[]> ufoRecords = getAllSightingsFromTSVFile();
         List<UfoSighting> uforows = new ArrayList<UfoSighting>();
+        UfoSighting uforows1;
         String dateSeen="";
         String dateReported="";
         String placeSeen="";
@@ -85,7 +87,7 @@ public class UfoSightingServiceImpl implements UfoSightingService{
                 System.out.println(e.getMessage());
             }
             
-            UfoSighting uforows1 = new UfoSighting(dateSeen,dateReported,placeSeen,shape,duration,description);
+            uforows1 = new UfoSighting(dateSeen,dateReported,placeSeen,shape,duration,description);
             
             uforows.add(uforows1);
         }
