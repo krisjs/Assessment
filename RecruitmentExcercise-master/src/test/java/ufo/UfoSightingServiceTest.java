@@ -2,6 +2,8 @@ package ufo;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import java.io.IOException;
 import java.util.List;
 import org.junit.Test;
 import ufo.dto.UfoSighting;
@@ -14,7 +16,7 @@ public class UfoSightingServiceTest {
      * This method tests list of sightings and Should returns the total 61393 records.
      */
     @Test
-    public void testListOfAllSighting() {
+    public void testListOfAllSighting() throws IOException {
         UfoSightingService ufoSightingService = new UfoSightingServiceImpl();
         List<UfoSighting> ufoListData = ufoSightingService.getAllSightings();
         assertNotNull(ufoListData);
@@ -25,7 +27,7 @@ public class UfoSightingServiceTest {
      * This method test the search functionality with year and month. It should returns the total 107 records.
      */
     @Test
-    public void testSearchListOfAllSightingWithYearAndMonth() {
+    public void testSearchListOfAllSightingWithYearAndMonth() throws IOException {
         UfoSightingService ufoSightingService = new UfoSightingServiceImpl();
         List<UfoSighting> ufoListData = ufoSightingService.search(1995,10);
         assertNotNull(ufoListData);
